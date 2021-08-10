@@ -8,8 +8,21 @@ import sys
 import time
 from threading import Thread
 import importlib.util
+
 import pandas 
 
+#Ultrasonic sensor
+import wiringpi2 as gpio
+HIGH = 1
+LOW = 0
+OUTPUT = 1
+INPUT = 0
+TRIG = 4
+ECHO = 5
+
+gpio.wiringPiSetup()
+gpio.pinMode(TRIG,OUTPUT)
+gpio.pinMode(ECHO,INPUT)
 
 ##Servo packages and initialize
 from gpiozero import Servo
@@ -163,6 +176,20 @@ time.sleep(1)
 
 #for frame1 in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
 while True:
+    #Ultrasonic sensor_H
+    gpio.digitalWrite(TRIG,LOW)
+    gpio.delayMicroseconds(2)
+
+    gpio.digitalWrite(TRIG,HIGH)
+    gpio.delayMicroseconds(10)
+    gpio.digitalWrite(TRIG,LOW)
+    
+    while gpio.digitalRead(ECHO) == LOW:
+	startTime = gpio.micros()
+    while gpio.digitalRead(ECHO) == HIGH:
+	endTime = gpio.micros()
+#unit=cm	
+    distance = (endTime - startTime) / 58.0
 
     # Start timer (for calculating frame rate)
     t1 = cv2.getTickCount()
@@ -231,6 +258,8 @@ while True:
         break
 
 # Clean up
+gpio.digitalWrite(TRIG, HIGH)
 cv2.destroyAllWindows()
 videostream.stop()
+quit()
 
