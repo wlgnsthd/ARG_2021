@@ -25,7 +25,7 @@ sudo pigpiod
 git clone https://github.com/EdjeElectronics/TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi.git
 ~~~
 
-### Run1
+### Virtual envrionment Run1
 ~~~
 #Tensorflow Lite Virtual environment setting
 mv TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi tflite1
@@ -33,7 +33,10 @@ cd tflite1
 sudo pip3 install virtualenv
 python3 -m venv tflite1-env
 source tflite1-env/bin/activate
-ls
+sudo pip3 install pandas
+sudo pip3 install gpiozero
+sudo pip3 install pigpio
+sudo pigpio
 ~~~
 
 ### Download and Update2
