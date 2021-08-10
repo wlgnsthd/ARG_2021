@@ -36,7 +36,7 @@ source tflite1-env/bin/activate
 sudo pip3 install pandas
 sudo pip3 install gpiozero
 sudo pip3 install pigpio
-sudo pigpio
+sudo pigpiod
 ~~~
 
 ### Download and Update2
