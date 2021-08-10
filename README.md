@@ -3,7 +3,7 @@
 <img src="https://user-images.githubusercontent.com/88171531/128798076-b0f0e147-077e-42b8-a984-964f46e72cb6.png">
 
 ## RPI Command Code
-### Download and Update1
+### Download and Update1 & Testing
 ~~~
 sudo apt update
 sudo apt full-upgrade
