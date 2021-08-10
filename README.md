@@ -42,6 +42,7 @@ python3 -m venv tflite1-env
 source tflite1-env/bin/activate
 
 sudo pip3 install pandas
+sudo pip3 install wiringpi2
 sudo pip3 install gpiozero
 sudo pip3 install pigpio
 sudo pigpiod
