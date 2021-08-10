@@ -14,29 +14,8 @@ sudo apt-get dist-upgrade
 sudo raspi-config 
 raspistill -v -o test.jpg
 
-#Servo
-sudo apt-get install python3-pandas
-sudo apt-get install python3-gpiozero
-sudo pip3 install gpiozero
-
-sudo pigpiod
-
 #Tensorflow Lite script download
 git clone https://github.com/EdjeElectronics/TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi.git
-~~~
-
-### Virtual envrionment Run1
-~~~
-#Tensorflow Lite Virtual environment setting
-mv TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi tflite1
-cd tflite1
-sudo pip3 install virtualenv
-python3 -m venv tflite1-env
-source tflite1-env/bin/activate
-sudo pip3 install pandas
-sudo pip3 install gpiozero
-sudo pip3 install pigpio
-sudo pigpiod
 ~~~
 
 ### Download and Update2
@@ -50,6 +29,22 @@ echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sud
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 sudo apt-get update
 sudo apt-get install libedgetpu1-std
+~~~
+
+
+### Virtual envrionment Run1
+~~~
+#Tensorflow Lite Virtual environment setting
+mv TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi tflite1
+cd tflite1
+sudo pip3 install virtualenv
+python3 -m venv tflite1-env
+source tflite1-env/bin/activate
+
+sudo pip3 install pandas
+sudo pip3 install gpiozero
+sudo pip3 install pigpio
+sudo pigpiod
 ~~~
 
 ### Run2(after putting tflite files into a folder) 
