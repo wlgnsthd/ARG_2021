@@ -1,3 +1,4 @@
+'''
 ## 파이카메라 세팅
 sudo raspi-config
 
@@ -59,3 +60,4 @@ python3 TFLite_detection_webcam.py --modeldir=Sample_TFLite_model
 ##python3 TFLite_detection_image.py --modeldir=Sample_TFLite_model --edgetpu
 
 #STEP3 대상 좌표 및 크기 데이터 뽑아내기 https://www.tensorflow.org/lite/inference_with_metadata/task_library/object_detector
+'''
