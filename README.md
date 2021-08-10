@@ -15,7 +15,8 @@ sudo raspi-config
 raspistill -v -o test.jpg
 
 #Servo
-sudo pip3 install pandas
+sudo apt-get install python3-pandas
+sudo apt-get install python3-gpiozero
 sudo pip3 install gpiozero
 
 sudo pigpiod
