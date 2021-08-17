@@ -41,6 +41,10 @@ sudo pip3 install virtualenv
 python3 -m venv tflite1-env
 source tflite1-env/bin/activate
 
+#Unzip meta tflite file 
+##cd Sample_TFLite_model
+##unzip detect.tflite -d Sample_TFLite_model
+
 sudo pip3 install pandas
 #Ultrasonic sensor
 sudo pip3 install wiringpi2
