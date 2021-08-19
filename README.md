@@ -24,7 +24,7 @@ git clone https://github.com/EdjeElectronics/TensorFlow-Lite-Object-Detection-on
 sudo pip3 install opencv-python 
 bash get_pi_requirements.sh
 
-##Download and Install TPU files
+##Download and Install TPU files (Do not connect TPU yet)
 echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | sudo tee /etc/apt/sources.list.d/coral-edgetpu.list
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 sudo apt-get update
