@@ -89,11 +89,11 @@ args = parser.parse_args()
 MODEL_NAME = args.modeldir
 GRAPH_NAME = args.graph
 LABELMAP_NAME = args.labels
-min_conf_threshold = float(args.threshold) #기본0.5
+min_conf_threshold = float(args.threshold) #default 0.5
 resW, resH = args.resolution.split('x')
 imW, imH = int(resW), int(resH)
 use_TPU = args.edgetpu
-
+print(resW, resH)
 # Import TensorFlow libraries
 # If tflite_runtime is installed, import interpreter from tflite_runtime, else import from regular tensorflow
 # If using Coral Edge TPU, import the load_delegate library
