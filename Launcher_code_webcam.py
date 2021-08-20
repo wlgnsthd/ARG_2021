@@ -23,8 +23,8 @@ factory = PiGPIOFactory()
 servo = Servo(12, pin_factory=factory)
 servo.min()
 
-#altimeter
-#gyro
+#ultrasonic:altimeter
+#gps:speedometer
 
 # Define VideoStream class to handle streaming of video from webcam in separate processing thread
 # Source - Adrian Rosebrock, PyImageSearch: https://www.pyimagesearch.com/2015/12/28/increasing-raspberry-pi-fps-with-python-and-opencv/
@@ -192,7 +192,7 @@ while True:
     #num = interpreter.get_tensor(output_details[3]['index'])[0]  # Total number of detected objects (inaccurate and not needed)
 
     # Loop over all detections and draw detection box if confidence is above minimum threshold
-    for i in range(1): #1개로 제한-추후 없애도 됨
+    for i in range(1): #restrict 1 
         if ((scores[i] > min_conf_threshold) and (scores[i] <= 1.0)):
 
             # Get bounding box coordinates and draw box
