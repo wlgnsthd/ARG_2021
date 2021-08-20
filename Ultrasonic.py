@@ -27,4 +27,4 @@ while True:
     distance = (endTime - startTime) / 58.0
     
     if distance < 400:
-        print 'Distance:', round(distance,2), 'cm'
+        print('Distance:', round(distance,2), 'cm')
