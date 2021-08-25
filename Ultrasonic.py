@@ -3,8 +3,8 @@ import time
 
 gpio.setmode(gpio.BCM)
 
-trig = 3
-echo = 2
+trig = 3 #pin5
+echo = 2 #pin3
 
 gpio.setup(trig, gpio.OUT)
 gpio.setup(echo, gpio.IN)
