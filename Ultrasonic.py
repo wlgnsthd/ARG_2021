@@ -25,9 +25,9 @@ while True:
 			pulse_end = time.time()
 			
 		pulse_duration = pulse_end - pulse_start
-		distance = pulse_duration *170000
+		distance = pulse_duration *170
 		distance = round(distance,2)
-		print("Distance:", distance, "cm")
+		print("Distance:", distance, "m")
 		
 	except:
 		gpio.cleanup()
