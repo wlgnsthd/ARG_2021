@@ -35,8 +35,10 @@ void loop()
   values[2] = main_value-(values[0]*100000+values[1]*100); //속도 6.8
   realvalues[0] = values[0]*0.001745; //x축각도 rad
    realvalues[1] = values[1]*0.001745; // y축각도 rad
-    realvalues[2] = values[2]*0.1; //속도
-    
+    realvalues[2] = values[2]*0.1; //속도m/s
+   float cond1 = arctan(realvalues[2]*sqrt(0.20408*realvalues[3])*0.66667);
+   float cond2 = arctan((realvalues[2]*sqrt(0.20408*realvues[3])-4.5)/realvalues[3]-0.78540;
+   float cond3 = arctan((realvalues[2]*sqrt(0.20408*realvues[3])-4.5)/realvalues[3]+0.78540;
 
  //안전모드 확인
    int safe_mode = pulseIn(receiver_pin,HIGH);
@@ -52,7 +54,7 @@ void loop()
     duration = pulseIn(echo, HIGH);  
  
     distance = duration * 0.000170;
-    realvalues[4] = distance; //고도
+    realvalues[3] = distance; //고도 m
     Serial.print("distance: ");
     Serial.print(distance); 
     Serial.println("m");
@@ -61,19 +63,21 @@ Serial.println(realvalues[1]);
 Serial.println(realvalues[2]);
 Serial.println(realvalues[3]);
 Serial.println(realvalues[4]);
+Serial.println(cond1);
+Serial.println(cond2);                        
+Serial.println(cond3);                       
 
 //서보 작동해서 투하
   if(safe_mode >= 1500){ //값 확인!
-    if (realvalues[0]<=arctan(realvalues[3]*sqrt(0.20408*realvalues[4])*0.66667){
+    if (realvalues[0]<=cond1){
      tone(buzzer, 1000);
-      if (realvalues){
-       
+     if (realvalues[1]>= cond2 && realvalues[1]<=cond3){
         servo.write(active_angle); 
-        delay(500);
+        delay(2000);
         servo.write(angle);
         delay(500);
      }
     } 
    }
-// } 
+//available } 
 }
