@@ -182,7 +182,7 @@ while True:
         ymax = int(min(imH,(boxes[i][2] * imH)))
         xmax = int(min(imW,(boxes[i][3] * imW)))
 	
-	    xaim = int((xmin+xmax)/2-320) # x coordinate of the center (-320~320)
+	xaim = int((xmin+xmax)/2-320) # x coordinate of the center (-320~320)
         yaim = int((ymin+ymax)/2-240) # y coordinate of the center (-240~240)
 
         xangle = xaim/320*60*10 # camera x angle 450 (revise 60)
