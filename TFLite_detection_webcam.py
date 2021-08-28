@@ -27,7 +27,7 @@ import importlib.util
 # Source - Adrian Rosebrock, PyImageSearch: https://www.pyimagesearch.com/2015/12/28/increasing-raspberry-pi-fps-with-python-and-opencv/
 class VideoStream:
     """Camera object that controls video streaming from the Picamera"""
-    def __init__(self,resolution=(640,480),framerate=30):
+    def __init__(self,resolution=(320,240),framerate=60):
         # Initialize the PiCamera and the camera image stream
         self.stream = cv2.VideoCapture(0)
         ret = self.stream.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
@@ -76,7 +76,7 @@ parser.add_argument('--labels', help='Name of the labelmap file, if different th
 parser.add_argument('--threshold', help='Minimum confidence threshold for displaying detected objects',
                     default=0.5)
 parser.add_argument('--resolution', help='Desired webcam resolution in WxH. If the webcam does not support the resolution entered, errors may occur.',
-                    default='1280x720')
+                    default='320x240')
 parser.add_argument('--edgetpu', help='Use Coral Edge TPU Accelerator to speed up detection',
                     action='store_true')
 
@@ -155,7 +155,7 @@ frame_rate_calc = 1
 freq = cv2.getTickFrequency()
 
 # Initialize video stream
-videostream = VideoStream(resolution=(imW,imH),framerate=30).start()
+videostream = VideoStream(resolution=(imW,imH),framerate=60).start()
 time.sleep(1)
 
 #for frame1 in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
@@ -188,7 +188,7 @@ while True:
     #num = interpreter.get_tensor(output_details[3]['index'])[0]  # Total number of detected objects (inaccurate and not needed)
 
     # Loop over all detections and draw detection box if confidence is above minimum threshold
-    for i in range(len(scores)):
+    for i in range(1): # we want only one object
         if ((scores[i] > min_conf_threshold) and (scores[i] <= 1.0)):
 
             # Get bounding box coordinates and draw box
@@ -197,7 +197,12 @@ while True:
             xmin = int(max(1,(boxes[i][1] * imW)))
             ymax = int(min(imH,(boxes[i][2] * imH)))
             xmax = int(min(imW,(boxes[i][3] * imW)))
-            
+	    
+	    xaim = int((xmin+xmax)/2-320) # x coordinate of the center (-320~320)
+	
+            yaim = int((ymin+ymax)/2-240) # y coordinate of the center (-240~240)
+	
+	
             cv2.rectangle(frame, (xmin,ymin), (xmax,ymax), (10, 255, 0), 2)
 
             # Draw label
