@@ -1,18 +1,3 @@
-######## Webcam Object Detection Using Tensorflow-trained Classifier #########
-#
-# Author: Evan Juras
-# Date: 10/27/19
-# Description: 
-# This program uses a TensorFlow Lite model to perform object detection on a live webcam
-# feed. It draws boxes and scores around the objects of interest in each frame from the
-# webcam. To improve FPS, the webcam object runs in a separate thread from the main program.
-# This script will work with either a Picamera or regular USB webcam.
-#
-# This code is based off the TensorFlow Lite image classification example at:
-# https://github.com/tensorflow/tensorflow/blob/master/tensorflow/lite/examples/python/label_image.py
-#
-# I added my own method of drawing boxes and labels using OpenCV.
-
 # Import packages
 import os
 import argparse
@@ -22,6 +7,8 @@ import sys
 import time
 from threading import Thread
 import importlib.util
+
+import serial
 
 # Define VideoStream class to handle streaming of video from webcam in separate processing thread
 # Source - Adrian Rosebrock, PyImageSearch: https://www.pyimagesearch.com/2015/12/28/increasing-raspberry-pi-fps-with-python-and-opencv/
@@ -122,12 +109,6 @@ PATH_TO_LABELS = os.path.join(CWD_PATH,MODEL_NAME,LABELMAP_NAME)
 with open(PATH_TO_LABELS, 'r') as f:
     labels = [line.strip() for line in f.readlines()]
 
-# Have to do a weird fix for label map if using the COCO "starter model" from
-# https://www.tensorflow.org/lite/models/object_detection/overview
-# First label is '???', which has to be removed.
-if labels[0] == '???':
-    del(labels[0])
-
 # Load the Tensorflow Lite model.
 # If using Edge TPU, use special load_delegate argument
 if use_TPU:
@@ -157,6 +138,9 @@ freq = cv2.getTickFrequency()
 # Initialize video stream
 videostream = VideoStream(resolution=(imW,imH),framerate=60).start()
 time.sleep(1)
+
+ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1) #communicate with arduino
+ser.flush()
 
 #for frame1 in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
 while True:
@@ -188,30 +172,35 @@ while True:
     #num = interpreter.get_tensor(output_details[3]['index'])[0]  # Total number of detected objects (inaccurate and not needed)
 
     # Loop over all detections and draw detection box if confidence is above minimum threshold
-    for i in range(1): # we want only one object
-        if ((scores[i] > min_conf_threshold) and (scores[i] <= 1.0)):
+    # we need only one object boundary
+    if ((scores[i] > min_conf_threshold) and (scores[i] <= 1.0)):
 
-            # Get bounding box coordinates and draw box
-            # Interpreter can return coordinates that are outside of image dimensions, need to force them to be within image using max() and min()
-            ymin = int(max(1,(boxes[i][0] * imH)))
-            xmin = int(max(1,(boxes[i][1] * imW)))
-            ymax = int(min(imH,(boxes[i][2] * imH)))
-            xmax = int(min(imW,(boxes[i][3] * imW)))
-	    
+        # Get bounding box coordinates and draw box
+        # Interpreter can return coordinates that are outside of image dimensions, need to force them to be within image using max() and min()
+        ymin = int(max(1,(boxes[i][0] * imH)))
+        xmin = int(max(1,(boxes[i][1] * imW)))
+        ymax = int(min(imH,(boxes[i][2] * imH)))
+        xmax = int(min(imW,(boxes[i][3] * imW)))
+	
 	    xaim = int((xmin+xmax)/2-320) # x coordinate of the center (-320~320)
-	
-            yaim = int((ymin+ymax)/2-240) # y coordinate of the center (-240~240)
-	
-	
-            cv2.rectangle(frame, (xmin,ymin), (xmax,ymax), (10, 255, 0), 2)
+        yaim = int((ymin+ymax)/2-240) # y coordinate of the center (-240~240)
 
-            # Draw label
-            object_name = labels[int(classes[i])] # Look up object name from "labels" array using class index
-            label = '%s: %d%%' % (object_name, int(scores[i]*100)) # Example: 'person: 72%'
-            labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2) # Get font size
-            label_ymin = max(ymin, labelSize[1] + 10) # Make sure not to draw label too close to top of window
-            cv2.rectangle(frame, (xmin, label_ymin-labelSize[1]-10), (xmin+labelSize[0], label_ymin+baseLine-10), (255, 255, 255), cv2.FILLED) # Draw white box to put label text in
-            cv2.putText(frame, label, (xmin, label_ymin-7), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2) # Draw label text
+        xangle = xaim/320*60*10 # camera x angle 450 (revise 60)
+        yangle = yaim/240*45*10 # camera y angle 450 (revise 45)
+
+        ser.write(b+str(xangle)+str(yangle)+"\n") #send message to arduino
+        line = ser.readline().decode('utf-8').rstrip()
+        print("We send "+line+ "to arduino")
+
+        cv2.rectangle(frame, (xmin,ymin), (xmax,ymax), (10, 255, 0), 2)
+
+        # Draw label
+        object_name = labels[int(classes[i])] # Look up object name from "labels" array using class index
+        label = '%s: %d%%' % (object_name, int(scores[i]*100)) # Example: 'person: 72%'
+        labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2) # Get font size
+        label_ymin = max(ymin, labelSize[1] + 10) # Make sure not to draw label too close to top of window
+        cv2.rectangle(frame, (xmin, label_ymin-labelSize[1]-10), (xmin+labelSize[0], label_ymin+baseLine-10), (255, 255, 255), cv2.FILLED) # Draw white box to put label text in
+        cv2.putText(frame, label + " x_aim : "+ str(xaim) + "y_aim : " + str(yaim), (xmin, label_ymin-7), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2) # Draw label text
 
     # Draw framerate in corner of frame
     cv2.putText(frame,'FPS: {0:.2f}'.format(frame_rate_calc),(30,50),cv2.FONT_HERSHEY_SIMPLEX,1,(255,255,0),2,cv2.LINE_AA)
