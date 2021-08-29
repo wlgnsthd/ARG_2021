@@ -185,10 +185,10 @@ while True:
 	xaim = int((xmin+xmax)/2-320) # x coordinate of the center (-320~320)
         yaim = int((ymin+ymax)/2-240) # y coordinate of the center (-240~240)
 
-        xangle = xaim/320*60*10 # camera x angle 450 (revise 60)
-        yangle = yaim/240*45*10 # camera y angle 450 (revise 45)
+        xangle = int(xaim/320*60*10) # camera x angle 450 (revise 60)
+        yangle = int(yaim/240*45*10) # camera y angle 450 (revise 45)
 
-        ser.write(b+str(xangle)+str(yangle)+"\n") #send message to arduino
+        ser.write(b+str(abs(xangle))+str(yangle)+"\n") #send message to arduino
         line = ser.readline().decode('utf-8').rstrip()
         print("We send "+line+ "to arduino")
 
