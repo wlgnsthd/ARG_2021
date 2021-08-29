@@ -41,7 +41,7 @@ void loop()
   t1 =t2;
   //read data sent by rpi(|x angle*10|,y angle*10)
   //String data = Serial.readStringUntil('\n');
-  String data = "468,-789";
+  String data = "468,-201";
   //string data to int
   char data_char[15]; //length of data
   data.toCharArray(data_char,15);
@@ -74,9 +74,9 @@ void loop()
   velocity = (distance2 - distance1)*1000/float(t2-t1);
    
   //deploy condition
-  cond1 = atanf((float(values[2])*0.1)*sqrt(0.20408*height)*0.66667);
-  cond2 = atanf(((float(values[2])*0.1)*sqrt(0.20408*height)-4.5)/height)-0.78540;
-  cond3 = atanf(((float(values[2])*0.1)*sqrt(0.20408*height)+4.5)/height)-0.78540;
+  cond1 = atanf((velocity)*sqrt(0.20408*height)*0.66667);
+  cond2 = atanf(((velocity)*sqrt(0.20408*height)-4.5)/height)-0.78540;
+  cond3 = atanf(((velocity)*sqrt(0.20408*height)+4.5)/height)-0.78540;
 
   //verify safemode
   safe_mode = pulseIn(receiver_pin,HIGH);
