@@ -10,11 +10,12 @@ const int angle = 0;
 const int active_angle = 90;
 
 const int buzzer = 3;
+const int buzzer2 = 4; 
 const int receiver_pin = 5;
 int values[2]; 
 int i,safe_mode;
 unsigned long t1, t2;
-float duration, velocity, distance1, distacne2, delt , height, height_test, cond1, cond2, cond3; 
+float valuexrad,valueyrad,duration, velocity, distance1, distance2, delt , height, height_test, cond1, cond2, cond3; 
 
 void setup()
 {
@@ -23,7 +24,12 @@ void setup()
    pinMode(echo, INPUT);   
    servo.attach(servoPin); 
    pinMode(buzzer, OUTPUT);
+   pinMode(buzzer2, OUTPUT);
+
    pinMode(receiver_pin,INPUT);
+   delt=0;
+   distance1=0;
+   distance2=0;
 }
 
 
@@ -31,7 +37,9 @@ void loop()
 { 
   //initialize
   i = 0;
-  //read data sent by rpi(|x angle*10|/y angle*10/velocity*10)
+  distance1 = distance2;
+  t1 =t2;
+  //read data sent by rpi(|x angle*10|,y angle*10)
   //String data = Serial.readStringUntil('\n');
   String data = "468,-789";
   //string data to int
@@ -44,7 +52,8 @@ void loop()
         ptr = strtok(NULL, ",");      
         i = i+1;
     }
-   
+  valuexrad = float(values[0])*0.0017453;
+  valueyrad = float(values[1])*0.0017453;
    //ultrasonic_height 
   digitalWrite(trig, LOW);        
   delayMicroseconds(2);            
@@ -58,40 +67,33 @@ void loop()
   {
   height = height_test; //reliable height value
   }
-  else
-  {
-  Serial.println("unreliable ultrasonic sensor value occured");      
-  }
-   
-   //velocity
-   distance1 = tan((float(values[1])*0.1+0.78540)*height;
-   t1 = millis() //late 1100
-   delt = float(t1-t2) /1000.0;
-   velocity = (distance1 - distance2) /(delt);
-   distance2 = tan(float(values[1])*0.1+0.78540)*height;
-   t2 = millis(); //early 1000
-
-
+  
+  //velocity - order is important
+  distance2 = tan(valueyrad+0.78540)*height;
+  t2 = millis()-12; //early 1000
+  velocity = (distance2 - distance1)*1000/float(t2-t1);
    
   //deploy condition
-  cond1 = atanf((float(values[2])*0.1)*sqrt(0.20408*distance)*0.66667);
-  cond2 = atanf(((float(values[2])*0.1)*sqrt(0.20408*distance)-4.5)/distance)-0.78540;
-  cond3 = atanf(((float(values[2])*0.1)*sqrt(0.20408*distance)+4.5)/distance)-0.78540;
+  cond1 = atanf((float(values[2])*0.1)*sqrt(0.20408*height)*0.66667);
+  cond2 = atanf(((float(values[2])*0.1)*sqrt(0.20408*height)-4.5)/height)-0.78540;
+  cond3 = atanf(((float(values[2])*0.1)*sqrt(0.20408*height)+4.5)/height)-0.78540;
 
- //verify safemode
+  //verify safemode
   safe_mode = pulseIn(receiver_pin,HIGH);
-  
+
   Serial.println("----VALUES----");
   Serial.print("SAFE_MODE : ");    
   Serial.println(safe_mode);
   Serial.print("|X_ANGLE| : ");    
-  Serial.println(values[0]*0.1);
+  Serial.print(values[0]*0.1);
+  Serial.print("  in rad : ");
+  Serial.println(valuexrad);
   Serial.print("Y_ANGLE : ");
-  Serial.println(values[1]*0.1);
-  Serial.print("VELOCITY : ");
-  Serial.println(values[2]*0.1);
+  Serial.print(values[1]*0.1);
+  Serial.print("  in rad : ");
+  Serial.println(valueyrad);
   Serial.print("HEIGHT : ");
-  Serial.println(distance);
+  Serial.println(height);
   Serial.print("VELOCITY : ");    
   Serial.println(velocity);
   Serial.println("----CONDITION----");
@@ -99,20 +101,29 @@ void loop()
   Serial.println(cond1);
   Serial.print("Y_ANGLE MIN: ");
   Serial.println(cond2);              
-  Serial.print("Y_ANGLE MAX: ");          
+  Serial.print("Y_ANGLE MAX: ");         
   Serial.println(cond3);      
   Serial.println("----------------");                 
 
 //deploy
   //if(safe_mode >= 1500){ //from rc receiver
-    if ((float(values[0])*0.001745)<=cond1){ 
+    if (valuexrad<=cond1){ 
       tone(buzzer, 1000);
-        if ((float(values[1])*0.001745)>= cond2 && (float(values[1])*0.001745)<=cond3){ 
+      Serial.println("Good x!");
+        if ((valueyrad)>= cond2 && (valueyrad)<=cond3){ 
+          tone(buzzer2,800);
           servo.write(active_angle); 
           delay(2000);
           servo.write(angle);
           delay(500);
-          }
-      } 
+          Serial.println("Fire!");
+          }else{
+          Serial.println("Adjust y!");}
+      }else{Serial.println("Adjust x!");
+      if ((valueyrad)>= cond2 && (valueyrad)<=cond3){
+        Serial.println("Good y!");
+        }else{Serial.println("Adjust y!");
+      }
+     }
    //}
 }
