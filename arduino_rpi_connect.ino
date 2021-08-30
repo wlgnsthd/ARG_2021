@@ -112,11 +112,11 @@ void loop()
       Serial.println("Good x!");
         if ((valueyrad)>= cond2 && (valueyrad)<=cond3){ 
           tone(buzzer2,800);
+          Serial.println("Fire!");
           servo.write(active_angle); 
           delay(2000);
           servo.write(angle);
           delay(500);
-          Serial.println("Fire!");
           }else{
           Serial.println("Adjust y!");}
       }else{Serial.println("Adjust x!");
