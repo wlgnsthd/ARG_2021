@@ -94,7 +94,7 @@ void loop()
   Serial.println(valueyrad);
   Serial.print("HEIGHT : ");
   Serial.print(height);
-  Serial.print(" test : );
+  Serial.print(" test : ");
   Serial.println(height_test);
   Serial.print("VELOCITY : ");    
   Serial.println(velocity);
