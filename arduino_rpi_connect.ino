@@ -63,7 +63,7 @@ void loop()
   duration = pulseIn(echo, HIGH);  
   //height filtering
   height_test = duration * 0.000170;
-  if(height_test >= 2.0 && height_test <= 8.0)
+  if(height_test >= 1.5 && height_test <= 8.0)
   {
   height = height_test; //reliable height value
   }
