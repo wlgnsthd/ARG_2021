@@ -41,7 +41,7 @@ void loop()
   t1 =t2;
   //read data sent by rpi(|x angle*10|,y angle*10)
   //String data = Serial.readStringUntil('\n');
-  String data = "468,-201";
+  String data = "001,-201";
   //string data to int
   char data_char[15]; //length of data
   data.toCharArray(data_char,15);
@@ -93,6 +93,8 @@ void loop()
   Serial.print("  in rad : ");
   Serial.println(valueyrad);
   Serial.print("HEIGHT : ");
+  Serial.print(height);
+  Serial.print(" test : );
   Serial.println(height_test);
   Serial.print("VELOCITY : ");    
   Serial.println(velocity);
