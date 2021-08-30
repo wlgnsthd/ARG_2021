@@ -93,7 +93,7 @@ void loop()
   Serial.print("  in rad : ");
   Serial.println(valueyrad);
   Serial.print("HEIGHT : ");
-  Serial.println(height);
+  Serial.println(height_test);
   Serial.print("VELOCITY : ");    
   Serial.println(velocity);
   Serial.println("----CONDITION----");
