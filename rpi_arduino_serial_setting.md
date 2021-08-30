@@ -1,3 +1,4 @@
+### If using nano-> revise "programmer"
 ## find arudino
 ~~~
 ls /dev/tty* 
