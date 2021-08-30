@@ -19,7 +19,7 @@ float valuexrad,valueyrad,duration, velocity, distance1, distance2, delt , heigh
 
 void setup()
 {
-   Serial.begin(9600);    
+   //Serial.begin(9600);    
    pinMode(trig, OUTPUT);    
    pinMode(echo, INPUT);   
    servo.attach(servoPin); 
@@ -37,6 +37,7 @@ void loop()
 { 
   //initialize
   i = 0;
+  height = 0.00;
   distance1 = distance2;
   t1 =t2;
   //read data sent by rpi(|x angle*10|,y angle*10)
@@ -81,7 +82,7 @@ void loop()
   //verify safemode
   safe_mode = pulseIn(receiver_pin,HIGH);
 
-  Serial.println("----VALUES----");
+ /* Serial.println("----VALUES----");
   Serial.print("SAFE_MODE : ");    
   Serial.println(safe_mode);
   Serial.print("|X_ANGLE| : ");    
@@ -93,7 +94,9 @@ void loop()
   Serial.print("  in rad : ");
   Serial.println(valueyrad);
   Serial.print("HEIGHT : ");
-  Serial.print(height);
+  */
+ // Serial.print(height);
+  /*
   Serial.print(" test : ");
   Serial.println(height_test);
   Serial.print("VELOCITY : ");    
@@ -106,25 +109,28 @@ void loop()
   Serial.print("Y_ANGLE MAX: ");         
   Serial.println(cond3);      
   Serial.println("----------------");                 
-
+*/
 //deploy
+noTone(buzzer);
+noTone(buzzer2);
   //if(safe_mode >= 1500){ //from rc receiver
     if (valuexrad<=cond1){ 
       tone(buzzer, 1000);
-      Serial.println("Good x!");
+      //Serial.println("Good x!");
         if ((valueyrad)>= cond2 && (valueyrad)<=cond3){ 
           tone(buzzer2,800);
-          Serial.println("Fire!");
+          //Serial.println("Fire!");
           servo.write(active_angle); 
           delay(2000);
           servo.write(angle);
           delay(500);
           }else{
-          Serial.println("Adjust y!");}
-      }else{Serial.println("Adjust x!");
+          //Serial.println("Adjust y!");
+        }
+      }else{//Serial.println("Adjust x!");
       if ((valueyrad)>= cond2 && (valueyrad)<=cond3){
-        Serial.println("Good y!");
-        }else{Serial.println("Adjust y!");
+        //Serial.println("Good y!");
+        }else{//Serial.println("Adjust y!");
       }
      }
    //}
