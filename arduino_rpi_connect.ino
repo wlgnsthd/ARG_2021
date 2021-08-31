@@ -119,8 +119,6 @@ void loop()
     if (valuexrad<=cond1) //compare with x_angle
     { 
       tone(buzzer, 1000);
-      delay(10);
-      noTone(buzzer);
       Serial.println("Good x!");
         if ((valueyrad)>= cond2 && (valueyrad)<=cond3) //Compare with y_angle
         {            
@@ -129,7 +127,6 @@ void loop()
   height = 0.00;
   distance1 = distance2;
   t1 = t2;
-  noTone(buzzer);
    
   //time when received           
   t2 = millis();         
@@ -184,9 +181,6 @@ void loop()
          }
        else //Good x , bad y
        {
-         tone(buzzer, 800);
-         delay(10);
-         noTone(buzzer);
          Serial.println("Adjust y!");
         }
      }
