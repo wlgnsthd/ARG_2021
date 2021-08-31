@@ -17,7 +17,7 @@ int values[2];
 byte i;
 //int safe_mode;
 unsigned long t1, t2;
-float valuexrad,valueyrad,duration, velocity, distance1, distance2, delt , height, height_test, cond1, cond2, cond3; 
+float valuexrad, valueyrad, duration, velocity, distance1, distance2, delt , height, height_test, cond1, cond2, cond3; 
 
 void setup()
 {
@@ -42,9 +42,11 @@ void loop()
   height = 0.00;
   distance1 = distance2;
   t1 =t2;
+  noTone(buzzer);
+  noTone(buzzer2);
   //read data sent by rpi(|x angle*10|,y angle*10)
   //String data = Serial.readStringUntil('\n');
-  String data = "001,-201";
+  String data = "001,-201"; //test data
   //string data to int
   char data_char[15]; //length of data
   data.toCharArray(data_char,15);
@@ -55,31 +57,30 @@ void loop()
     ptr = strtok(NULL, ",");      
     i = i+1;
   }
-  valuexrad = float(values[0])*0.0017453;
-  valueyrad = float(values[1])*0.0017453;
+  valuexrad = float(values[0])*0.0017453; //deg to rad
+  valueyrad = float(values[1])*0.0017453; //deg to rad
    //ultrasonic_height 
   digitalWrite(trig, LOW);        
   delayMicroseconds(2);            
   digitalWrite(trig, HIGH);   
   delayMicroseconds(10);            
-  digitalWrite(trig, LOW);        
-  duration = pulseIn(echo, HIGH);  
+  digitalWrite(trig, LOW);    
   //height filtering
-  height_test = duration * 0.000170;
-  if(height_test >= 1.5 && height_test <= 8.0)
+  height_test = pulseIn(echo, HIGH) * 0.000170;  
+  if(height_test >= 1.5 && height_test <= 8.0) //1.5~8.0m
   {
    height = height_test; //reliable height value
   }
   
   //velocity - order is important
-  distance2 = tan(valueyrad+0.78540)*height;
-  t2 = millis()-12; //early 1000
-  velocity = (distance2 - distance1)*1000/float(t2-t1);
+  distance2 = tan(valueyrad+0.78540) * height;
+  t2 = millis() - 12; //early 1000
+  velocity = (distance1 - distance2) * 1000 / float(t2-t1);
    
   //deploy condition
-  cond1 = atanf((velocity)*sqrt(0.20408*height)*0.66667);
-  cond2 = atanf(((velocity)*sqrt(0.20408*height)-4.5)/height)-0.78540;
-  cond3 = atanf(((velocity)*sqrt(0.20408*height)+4.5)/height)-0.78540;
+  cond1 = atanf((velocity) * sqrt(0.20408 * height) * 0.66667); //x angle
+  cond2 = atanf(((velocity) * sqrt(0.20408 * height) - 4.5) / height) - 0.78540; //y angle1
+  cond3 = atanf(((velocity) * sqrt(0.20408 * height) + 4.5) / height) - 0.78540; //y angle2
 
   //verify safemode ->too much time
   //safe_mode = pulseIn(receiver_pin,HIGH);
@@ -111,14 +112,12 @@ void loop()
   Serial.println("----------------");                 
 
 //deploy
-noTone(buzzer);
-noTone(buzzer2);
  //if(safe_mode >= 1500){ //from rc receiver
-    if (valuexrad<=cond1)
+    if (valuexrad<=cond1) //compare with x_angle
     { 
       tone(buzzer, 1000);
       Serial.println("Good x!");
-        if ((valueyrad)>= cond2 && (valueyrad)<=cond3)
+        if ((valueyrad)>= cond2 && (valueyrad)<=cond3) //Compare with y_angle
         { 
           tone(buzzer2,800);
           //Serial.println("Fire!");
@@ -135,7 +134,7 @@ noTone(buzzer2);
      else
      {
        Serial.println("Adjust x!");
-       if ((valueyrad)>= cond2 && (valueyrad)<=cond3)
+       if ((valueyrad)>= cond2 && (valueyrad)<=cond3) //compare with y_angle
        {
         Serial.println("Good y!");
        }
