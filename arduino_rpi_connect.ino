@@ -1,25 +1,27 @@
 #define trig 8   
 #define echo 9
+#define servoPin = 10;
+#define angle = 0; 
+#define active_angle = 90;
+
+#define buzzer = 3;
+#define buzzer2 = 4; 
+#define receiver_pin = 5;
 #include <Servo.h> 
 #include <math.h>
 #include <stdlib.h>
 
 Servo servo; 
-const int servoPin = 10;
-const int angle = 0; 
-const int active_angle = 90;
 
-const int buzzer = 3;
-const int buzzer2 = 4; 
-const int receiver_pin = 5;
 int values[2]; 
-int i,safe_mode;
+byte i;
+int safe_mode;
 unsigned long t1, t2;
 float valuexrad,valueyrad,duration, velocity, distance1, distance2, delt , height, height_test, cond1, cond2, cond3; 
 
 void setup()
 {
-   //Serial.begin(9600);    
+   Serial.begin(9600);    
    pinMode(trig, OUTPUT);    
    pinMode(echo, INPUT);   
    servo.attach(servoPin); 
@@ -79,10 +81,10 @@ void loop()
   cond2 = atanf(((velocity)*sqrt(0.20408*height)-4.5)/height)-0.78540;
   cond3 = atanf(((velocity)*sqrt(0.20408*height)+4.5)/height)-0.78540;
 
-  //verify safemode
-  safe_mode = pulseIn(receiver_pin,HIGH);
+  //verify safemode ->too much time
+  //safe_mode = pulseIn(receiver_pin,HIGH);
 
- /* Serial.println("----VALUES----");
+  Serial.println("----VALUES----");
   Serial.print("SAFE_MODE : ");    
   Serial.println(safe_mode);
   Serial.print("|X_ANGLE| : ");    
@@ -94,9 +96,9 @@ void loop()
   Serial.print("  in rad : ");
   Serial.println(valueyrad);
   Serial.print("HEIGHT : ");
-  */
- // Serial.print(height);
-  /*
+  
+  Serial.print(height);
+  
   Serial.print(" test : ");
   Serial.println(height_test);
   Serial.print("VELOCITY : ");    
@@ -109,14 +111,14 @@ void loop()
   Serial.print("Y_ANGLE MAX: ");         
   Serial.println(cond3);      
   Serial.println("----------------");                 
-*/
+
 //deploy
 noTone(buzzer);
 noTone(buzzer2);
   //if(safe_mode >= 1500){ //from rc receiver
     if (valuexrad<=cond1){ 
       tone(buzzer, 1000);
-      //Serial.println("Good x!");
+      Serial.println("Good x!");
         if ((valueyrad)>= cond2 && (valueyrad)<=cond3){ 
           tone(buzzer2,800);
           //Serial.println("Fire!");
@@ -125,13 +127,13 @@ noTone(buzzer2);
           servo.write(angle);
           delay(500);
           }else{
-          //Serial.println("Adjust y!");
+          Serial.println("Adjust y!");
         }
-      }else{//Serial.println("Adjust x!");
+      }else{Serial.println("Adjust x!");
       if ((valueyrad)>= cond2 && (valueyrad)<=cond3){
-        //Serial.println("Good y!");
-        }else{//Serial.println("Adjust y!");
+        Serial.println("Good y!");
+        }else{Serial.println("Adjust y!");
       }
      }
-   //}
+   }
 }
