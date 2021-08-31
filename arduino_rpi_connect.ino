@@ -15,7 +15,7 @@ Servo servo;
 int values[2]; 
 byte i;
 //short safe_mode;
-unsigned long t1, t2;
+unsigned long t1, t2, tt;
 float valuexrad, valueyrad, duration, velocity, distance1, distance2, delt , height, height_test, cond1, cond2, cond3; 
 
 void setup()
