@@ -12,7 +12,8 @@
 
 Servo servo; 
 
-int values[2]; 
+int values[2];
+
 byte i;
 //short safe_mode;
 unsigned long t1, t2;
@@ -35,6 +36,8 @@ void loop()
 { 
   //initialize
   i = 0;
+  value[0] = 89;
+  value[1] = 44;
   height = 0.00;
   distance1 = 0.00;//distance2;
   t1 = t2;
