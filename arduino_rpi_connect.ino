@@ -15,7 +15,7 @@ Servo servo;
 int values[2]; 
 byte i;
 //short safe_mode;
-unsigned long t1, t2, tt;
+unsigned long t1, t2;
 float valuexrad, valueyrad, duration, velocity, distance1, distance2, height, height_test, cond1, cond2, cond3; 
 
 void setup()
@@ -36,13 +36,13 @@ void loop()
   //initialize
   i = 0;
   height = 0.00;
-  distance1 = distance2;
+  distance1 = 0.00;//distance2;
   t1 = t2;
   noTone(buzzer);
   t2 = millis(); 
   //read data sent by rpi(|x angle*10|,y angle*10)
   //String data = Serial.readStringUntil('\n');
-  String data = "001,-201"; //test data
+  String data = "121,201"; //test data
   //string data to int
   char data_char[15]; //length of data
   data.toCharArray(data_char,15);
@@ -68,6 +68,7 @@ void loop()
   {
    height = height_test; //reliable height value
   }
+  //height = ; //test
   
   //velocity - order is important
   distance2 = tan(valueyrad + (0.78540)) * height; //0.78540rad = 45deg
@@ -96,6 +97,12 @@ void loop()
   Serial.print(height);
   Serial.print(" test : ");
   Serial.println(height_test);
+  Serial.print("Time gap : ");    
+  Serial.println(t2-t1);
+  Serial.print("Distance gap : ");    
+  Serial.print(distance2 - distance1);
+  Serial.print("  Distance 2 : ");  
+  Serial.println(distance2);
   Serial.print("VELOCITY : ");    
   Serial.println(velocity);
   Serial.println("----CONDITION----");
