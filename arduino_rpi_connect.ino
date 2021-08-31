@@ -41,8 +41,8 @@ void loop()
   noTone(buzzer);
   t2 = millis(); 
   //read data sent by rpi(|x angle*10|,y angle*10)
-  //String data = Serial.readStringUntil('\n');
-  String data = "121,201"; //test data
+  String data = Serial.readStringUntil('\n');
+  //String data = "121,201"; //test data
   //string data to int
   char data_char[15]; //length of data
   data.toCharArray(data_char,15);
