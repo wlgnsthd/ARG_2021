@@ -44,6 +44,7 @@ void loop()
   t1 =t2;
   noTone(buzzer);
   noTone(buzzer2);
+   
   //read data sent by rpi(|x angle*10|,y angle*10)
   //String data = Serial.readStringUntil('\n');
   String data = "001,-201"; //test data
@@ -57,8 +58,9 @@ void loop()
     ptr = strtok(NULL, ",");      
     i = i+1;
   }
-  valuexrad = float(values[0])*0.0017453; //deg to rad
-  valueyrad = float(values[1])*0.0017453; //deg to rad
+  valuexrad = float(values[0]) * 0.0017453; //deg to rad
+  valueyrad = float(values[1]) * 0.0017453; //deg to rad
+   
    //ultrasonic_height 
   digitalWrite(trig, LOW);        
   delayMicroseconds(2);            
@@ -66,21 +68,21 @@ void loop()
   delayMicroseconds(10);            
   digitalWrite(trig, LOW);    
   //height filtering
-  height_test = pulseIn(echo, HIGH) * 0.000170;  
+  height_test = pulseIn(echo, HIGH) * 0.000170;  //meter
   if(height_test >= 1.5 && height_test <= 8.0) //1.5~8.0m
   {
    height = height_test; //reliable height value
   }
   
   //velocity - order is important
-  distance2 = tan(valueyrad+0.78540) * height;
-  t2 = millis() - 12; //early 1000
+  distance2 = tan(valueyrad + (0.78540)) * height; //0.78540rad = 45deg
+  t2 = millis() - 12; //+ultrasonic 12miliseconds
   velocity = (distance1 - distance2) * 1000 / float(t2-t1);
    
   //deploy condition
-  cond1 = atanf((velocity) * sqrt(0.20408 * height) * 0.66667); //x angle
-  cond2 = atanf(((velocity) * sqrt(0.20408 * height) - 4.5) / height) - 0.78540; //y angle1
-  cond3 = atanf(((velocity) * sqrt(0.20408 * height) + 4.5) / height) - 0.78540; //y angle2
+  cond1 = atanf((velocity) * sqrt(height) * 0.30102); //x angle
+  cond2 = atanf(((velocity) * sqrt(0.20387 * height) - 4.50000) / height) - 0.78540; //y angle1
+  cond3 = atanf(((velocity) * sqrt(0.20387 * height) + 4.50000) / height) - 0.78540; //y angle2
 
   //verify safemode ->too much time
   //safe_mode = pulseIn(receiver_pin,HIGH);
