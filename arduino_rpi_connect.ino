@@ -16,7 +16,7 @@ int values[2];
 byte i;
 //short safe_mode;
 unsigned long t1, t2, tt;
-float valuexrad, valueyrad, duration, velocity, distance1, distance2, delt , height, height_test, cond1, cond2, cond3; 
+float valuexrad, valueyrad, duration, velocity, distance1, distance2, height, height_test, cond1, cond2, cond3; 
 
 void setup()
 {
@@ -26,9 +26,8 @@ void setup()
    servo.attach(servoPin); 
    pinMode(buzzer, OUTPUT);
    //pinMode(receiver_pin,INPUT);
-   delt=0;
-   distance1=0;
-   distance2=0;
+   distance1 = 0;
+   distance2 = 0;
 }
 
 
@@ -40,7 +39,7 @@ void loop()
   distance1 = distance2;
   t1 = t2;
   noTone(buzzer);
-   
+  t2 = millis(); 
   //read data sent by rpi(|x angle*10|,y angle*10)
   //String data = Serial.readStringUntil('\n');
   String data = "001,-201"; //test data
@@ -72,7 +71,6 @@ void loop()
   
   //velocity - order is important
   distance2 = tan(valueyrad + (0.78540)) * height; //0.78540rad = 45deg
-  t2 = millis() - 12; //+ultrasonic 12miliseconds
   velocity = (distance1 - distance2) * 1000 / float(t2-t1);
    
   //deploy condition
@@ -114,11 +112,11 @@ void loop()
     if (valuexrad<=cond1) //compare with x_angle
     { 
       tone(buzzer, 1000);
+      delay(10);
+      noTone(buzzer);
       Serial.println("Good x!");
         if ((valueyrad)>= cond2 && (valueyrad)<=cond3) //Compare with y_angle
-        { 
-         tone(buzzer, 800);
-           
+        {            
   //one more time!         
   i = 0;
   height = 0.00;
@@ -126,9 +124,10 @@ void loop()
   t1 = t2;
   noTone(buzzer);
    
+  //time when received           
+  t2 = millis();         
   //read data sent by rpi(|x angle*10|,y angle*10)
   String data = Serial.readStringUntil('\n');
-  
   //string data to int
   char data_char[15]; //length of data
   data.toCharArray(data_char,15);
@@ -139,6 +138,7 @@ void loop()
     ptr = strtok(NULL, ",");      
     i = i+1;
   }
+           
   valuexrad = float(values[0]) * 0.0017453; //deg to rad
   valueyrad = float(values[1]) * 0.0017453; //deg to rad
    
@@ -157,7 +157,6 @@ void loop()
   
   //velocity - order is important
   distance2 = tan(valueyrad + (0.78540)) * height; //0.78540rad = 45deg
-  t2 = millis() - 12; //+ultrasonic 12miliseconds
   velocity = (distance1 - distance2) * 1000 / float(t2-t1);
    
   //deploy condition
@@ -176,8 +175,11 @@ void loop()
    }
 
          }
-       else
+       else //Good x , bad y
        {
+         tone(buzzer, 800);
+         delay(10);
+         noTone(buzzer);
          Serial.println("Adjust y!");
         }
      }
