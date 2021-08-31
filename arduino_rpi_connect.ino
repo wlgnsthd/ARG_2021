@@ -4,8 +4,7 @@
 #define angle  0
 #define active_angle  90
 #define buzzer  3
-#define buzzer2 4
-#define receiver_pin 5
+//#define receiver_pin 5
 
 #include <Servo.h> 
 #include <math.h>
@@ -15,7 +14,7 @@ Servo servo;
 
 int values[2]; 
 byte i;
-//int safe_mode;
+//short safe_mode;
 unsigned long t1, t2;
 float valuexrad, valueyrad, duration, velocity, distance1, distance2, delt , height, height_test, cond1, cond2, cond3; 
 
@@ -26,9 +25,7 @@ void setup()
    pinMode(echo, INPUT);   
    servo.attach(servoPin); 
    pinMode(buzzer, OUTPUT);
-   pinMode(buzzer2, OUTPUT);
-
-   pinMode(receiver_pin,INPUT);
+   //pinMode(receiver_pin,INPUT);
    delt=0;
    distance1=0;
    distance2=0;
@@ -41,9 +38,8 @@ void loop()
   i = 0;
   height = 0.00;
   distance1 = distance2;
-  t1 =t2;
+  t1 = t2;
   noTone(buzzer);
-  noTone(buzzer2);
    
   //read data sent by rpi(|x angle*10|,y angle*10)
   //String data = Serial.readStringUntil('\n');
@@ -88,8 +84,8 @@ void loop()
   //safe_mode = pulseIn(receiver_pin,HIGH);
 
   Serial.println("----VALUES----");
-  Serial.print("SAFE_MODE : ");    
-  Serial.println(safe_mode);
+ //Serial.print("SAFE_MODE : ");    
+ // Serial.println(safe_mode);
   Serial.print("|X_ANGLE| : ");    
   Serial.print(values[0]*0.1);
   Serial.print("  in rad : ");
@@ -121,12 +117,64 @@ void loop()
       Serial.println("Good x!");
         if ((valueyrad)>= cond2 && (valueyrad)<=cond3) //Compare with y_angle
         { 
-          tone(buzzer2,800);
+         tone(buzzer, 800);
+           
+  //one more time!         
+  i = 0;
+  height = 0.00;
+  distance1 = distance2;
+  t1 = t2;
+  noTone(buzzer);
+   
+  //read data sent by rpi(|x angle*10|,y angle*10)
+  String data = Serial.readStringUntil('\n');
+  
+  //string data to int
+  char data_char[15]; //length of data
+  data.toCharArray(data_char,15);
+  char *ptr = strtok(data_char, ","); //classify with ","
+  while (ptr != NULL)              
+  {
+    values[i] = atoi(ptr);
+    ptr = strtok(NULL, ",");      
+    i = i+1;
+  }
+  valuexrad = float(values[0]) * 0.0017453; //deg to rad
+  valueyrad = float(values[1]) * 0.0017453; //deg to rad
+   
+   //ultrasonic_height 
+  digitalWrite(trig, LOW);        
+  delayMicroseconds(2);            
+  digitalWrite(trig, HIGH);   
+  delayMicroseconds(10);            
+  digitalWrite(trig, LOW);    
+  //height filtering
+  height_test = pulseIn(echo, HIGH) * 0.000170;  //meter
+  if(height_test >= 1.5 && height_test <= 8.0) //1.5~8.0m
+  {
+   height = height_test; //reliable height value
+  }
+  
+  //velocity - order is important
+  distance2 = tan(valueyrad + (0.78540)) * height; //0.78540rad = 45deg
+  t2 = millis() - 12; //+ultrasonic 12miliseconds
+  velocity = (distance1 - distance2) * 1000 / float(t2-t1);
+   
+  //deploy condition
+  cond1 = atanf((velocity) * sqrt(height) * 0.30102); //x angle
+  cond2 = atanf(((velocity) * sqrt(0.20387 * height) - 4.50000) / height) - 0.78540; //y angle1
+  cond3 = atanf(((velocity) * sqrt(0.20387 * height) + 4.50000) / height) - 0.78540; //y angle2
+           
+   if (valuexrad<=cond1){
+       if ((valueyrad)>= cond2 && (valueyrad)<=cond3){
           //Serial.println("Fire!");
           servo.write(active_angle); 
           delay(2000);
           servo.write(angle);
           delay(500);
+       }
+   }
+
          }
        else
        {
