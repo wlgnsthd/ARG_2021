@@ -8,7 +8,6 @@ import sys
 import time
 from threading import Thread
 import importlib.util
-import pandas 
 
 
 ##Servo packages and initialize
@@ -24,13 +23,12 @@ servo = Servo(12, pin_factory=factory)
 servo.min()
 
 #ultrasonic:altimeter
-#gps:speedometer
 
 # Define VideoStream class to handle streaming of video from webcam in separate processing thread
 # Source - Adrian Rosebrock, PyImageSearch: https://www.pyimagesearch.com/2015/12/28/increasing-raspberry-pi-fps-with-python-and-opencv/
 class VideoStream:
     """Camera object that controls video streaming from the Picamera"""
-    def __init__(self,resolution=(320,240),framerate=60):
+    def __init__(self,resolution=(1920,1080),framerate=30):
         # Initialize the PiCamera and the camera image stream
         self.stream = cv2.VideoCapture(0)
         ret = self.stream.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
@@ -80,7 +78,7 @@ parser.add_argument('--threshold', help='Minimum confidence threshold for displa
                     default=0.5)
 ##Revise resolution
 parser.add_argument('--resolution', help='Desired webcam resolution in WxH. If the webcam does not support the resolution entered, errors may occur.',
-                    default='320x240')
+                    default='320x180')
 parser.add_argument('--edgetpu', help='Use Coral Edge TPU Accelerator to speed up detection',
                     action='store_true')
 
