@@ -9,21 +9,6 @@ import time
 from threading import Thread
 import importlib.util
 
-
-##Servo packages and initialize
-from gpiozero import Servo
-from time import sleep
-#Software disturbance solution code
-from gpiozero.pins.pigpio import PiGPIOFactory
-
-factory = PiGPIOFactory()
-
-##Servo Pin _ one signal two action?
-servo = Servo(12, pin_factory=factory)
-servo.min()
-
-#ultrasonic:altimeter
-
 # Define VideoStream class to handle streaming of video from webcam in separate processing thread
 # Source - Adrian Rosebrock, PyImageSearch: https://www.pyimagesearch.com/2015/12/28/increasing-raspberry-pi-fps-with-python-and-opencv/
 class VideoStream:
