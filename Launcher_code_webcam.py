@@ -184,8 +184,8 @@ while True:
             xmin = int(max(1,(boxes[i][1] * imW)))
             ymax = int(min(imH,(boxes[i][2] * imH)))
             xmax = int(min(imW,(boxes[i][3] * imW)))
-            xaim = int((xmin+xmax)/2-640)
-            yaim = int((ymin+ymax)/2-480) ##aim
+            xaim = int((xmin+xmax)/2-320)
+            yaim = int((ymin+ymax)/2-240) ##aim
             cv2.rectangle(frame, (xmin,ymin), (xmax,ymax), (10, 255, 0), 2)
 
             # Draw label
@@ -194,7 +194,7 @@ while True:
             labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2) # Get font size
             label_ymin = max(ymin, labelSize[1] + 10) # Make sure not to draw label too close to top of window
             cv2.rectangle(frame, (xmin, label_ymin-labelSize[1]-10), (xmin+labelSize[0], label_ymin+baseLine-10), (255, 255, 255), cv2.FILLED) # Draw white box to put label text in
-            cv2.putText(frame, label + "x_min,max y_min,max/aim :"+str(xmin)+","+str(xmax)+","+str(ymin)+","+str(ymax)+"/"+str(xaim)+","+str(yaim), (xmin, label_ymin-7), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2) # Draw label text,frame coordinate
+            cv2.putText(frame, label + " :"+str(xmin)+","+str(xmax)+","+str(ymin)+","+str(ymax)+"/"+str(xaim)+","+str(yaim), (xmin, label_ymin-7), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2) # Draw label text,frame coordinate
 
        
 
