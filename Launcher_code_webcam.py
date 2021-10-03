@@ -200,7 +200,7 @@ while True:
             yaim = int((ymin+ymax)/2-160) ##aim
 	    
 	    # Send message to arduino (optional)
-	    ser.write(b+str(abs(xangle))+str(yangle)+"\n")
+            ser.write(b+str(abs(xangle))+str(yangle)+"\n")
             line = ser.readline().decode('utf-8').rstrip()
             print("We send "+line+ "to arduino")
 		
