@@ -9,6 +9,9 @@ import time
 from threading import Thread
 import importlib.util
 
+#for arduino communication (optional)
+import serial
+
 # Define VideoStream class to handle streaming of video from webcam in separate processing thread
 # Source - Adrian Rosebrock, PyImageSearch: https://www.pyimagesearch.com/2015/12/28/increasing-raspberry-pi-fps-with-python-and-opencv/
 class VideoStream:
@@ -145,6 +148,10 @@ freq = cv2.getTickFrequency()
 videostream = VideoStream(resolution=(imW,imH),framerate=30).start()
 time.sleep(1)
 
+# for arduino communication (optional)
+ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1) #communicate with arduino
+ser.flush()
+
 #for frame1 in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
 while True:
 
@@ -191,6 +198,12 @@ while True:
             xmax = int(min(imW,(boxes[i][3] * imW)))
             xaim = int((xmin+xmax)/2-160)
             yaim = int((ymin+ymax)/2-160) ##aim
+	    
+	    # Send message to arduino (optional)
+	    ser.write(b+str(abs(xangle))+str(yangle)+"\n")
+            line = ser.readline().decode('utf-8').rstrip()
+            print("We send "+line+ "to arduino")
+		
             cv2.rectangle(frame, (xmin,ymin), (xmax,ymax), (10, 255, 0), 2)
 
             # Draw label
