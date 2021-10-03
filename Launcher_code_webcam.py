@@ -198,7 +198,8 @@ while True:
             xmax = int(min(imW,(boxes[i][3] * imW)))
             xaim = int((xmin+xmax)/2-160)
             yaim = int((ymin+ymax)/2-160) ##aim
-	    
+            xangle = int(xaim/320*60*10) # camera x angle 450 (revise 60)
+            yangle = int(yaim/240*45*10) # camera y angle 450 (revise 45)	    
 	    # Send message to arduino (optional)
             ser.write(b+str(abs(xangle))+str(yangle)+"\n")
             line = ser.readline().decode('utf-8').rstrip()
