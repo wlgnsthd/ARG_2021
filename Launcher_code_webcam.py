@@ -168,11 +168,16 @@ while True:
     interpreter.set_tensor(input_details[0]['index'],input_data)
     interpreter.invoke()
 
-    # Retrieve detection results
-    boxes = interpreter.get_tensor(output_details[0]['index'])[0] # Bounding box coordinates of detected objects
-    classes = interpreter.get_tensor(output_details[1]['index'])[0] # Class index of detected objects
-    scores = interpreter.get_tensor(output_details[2]['index'])[0] # Confidence of detected objects
+    # Retrieve detection results : Original
+    #boxes = interpreter.get_tensor(output_details[0]['index'])[0] # Bounding box coordinates of detected objects
+    #classes = interpreter.get_tensor(output_details[1]['index'])[0] # Class index of detected objects
+    #scores = interpreter.get_tensor(output_details[2]['index'])[0] # Confidence of detected objects
     #num = interpreter.get_tensor(output_details[3]['index'])[0]  # Total number of detected objects (inaccurate and not needed)
+	
+    boxes = interpreter.get_tensor(output_details[1]['index'])[0] # Bounding box coordinates of detected objects
+    classes = interpreter.get_tensor(output_details[3]['index'])[0] # Class index of detected objects
+    scores = interpreter.get_tensor(output_details[0]['index'])[0] # Confidence of detected objects
+    #num = interpreter.get_tensor(output_details[2]['index'])[0]  # Total number of detected objects (inaccurate and not needed)
 
     # Loop over all detections and draw detection box if confidence is above minimum threshold
     for i in range(1): #restrict 1 
@@ -194,7 +199,7 @@ while True:
             labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2) # Get font size
             label_ymin = max(ymin, labelSize[1] + 10) # Make sure not to draw label too close to top of window
             cv2.rectangle(frame, (xmin, label_ymin-labelSize[1]-10), (xmin+labelSize[0], label_ymin+baseLine-10), (255, 255, 255), cv2.FILLED) # Draw white box to put label text in
-            cv2.putText(frame, label + " :"+str(xmin)+","+str(xmax)+","+str(ymin)+","+str(ymax)+"/"+str(xaim)+","+str(yaim), (xmin, label_ymin-7), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2) # Draw label text,frame coordinate
+            cv2.putText(frame, str(xmin)+","+str(xmax)+","+str(ymin)+","+str(ymax)+"/"+str(xaim)+","+str(yaim), (xmin, label_ymin-7), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2) # Draw label text,frame coordinate
 
        
 
