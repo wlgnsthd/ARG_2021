@@ -199,11 +199,20 @@ while True:
             xaim = int((xmin+xmax)/2-160)
             yaim = int((ymin+ymax)/2-160) ##aim
             xangle = int(xaim/320*60*10) # camera x angle 450 (revise 60)
-            yangle = int(yaim/240*45*10) # camera y angle 450 (revise 45)	    
+            yangle = int(yaim/240*45*10) # camera y angle 450 (revise 45)
+		
 	    # Send message to arduino (optional)
-            ser.write(b+str(abs(xangle))+str(yangle)+"\n")
-            line = ser.readline().decode('utf-8').rstrip()
-            print("We send "+line+ "to arduino")
+            cmd = str(abs(xangle))+str(yangle)+'\n'
+            ser.write(cmd.encode('utf-8'))
+            
+            # from arduino
+            # line = ser.readline().decode('utf-8').rstrip()
+		
+            # for debug
+            print(cmd)
+            #print("We got "+line+ "from arduino")
+
+
 		
             cv2.rectangle(frame, (xmin,ymin), (xmax,ymax), (10, 255, 0), 2)
 
