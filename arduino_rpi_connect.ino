@@ -57,7 +57,7 @@ void loop()
   }
   valuexrad = float(values[0]) * 0.0017453; //deg to rad
   valueyrad = float(values[1]) * 0.0017453; //deg to rad
-   
+
   //ultrasonic_height 
   digitalWrite(trig, LOW);        
   delayMicroseconds(2);            
@@ -70,7 +70,7 @@ void loop()
   { //1.5~8.0m
     height = height_test; //reliable height value
   }
-  
+ Serial.println(height_test);
   //velocity - order is important
   distance2 = tan(valueyrad + (0.78540)) * height; //0.78540rad = 45deg
   velocity = (distance1 - distance2) * 1000 / float(t2-t1);
@@ -81,46 +81,14 @@ void loop()
   cond3 = atanf(((velocity) * sqrt(0.20387 * height) + 4.50000) / height) - 0.78540; //y angle2
 
   //verify safemode -> too much time
-  //safe_mode = pulseIn(receiver_pin,HIGH);
-
-  Serial.println("----VALUES----");
- //Serial.print("SAFE_MODE : ");    
- // Serial.println(safe_mode);
-  Serial.print("|X_ANGLE| : ");    
-  Serial.print(values[0]*0.1);
-  Serial.print("  in rad : ");
-  Serial.println(valuexrad);
-  Serial.print("Y_ANGLE : ");
-  Serial.print(values[1]*0.1);
-  Serial.print("  in rad : ");
-  Serial.println(valueyrad);
-  Serial.print("HEIGHT : ");
-  Serial.print(height);
-  Serial.print(" test : ");
-  Serial.println(height_test);
-  Serial.print("Time gap : ");    
-  Serial.println(t2-t1);
-  Serial.print("Distance gap : ");    
-  Serial.print(distance2 - distance1);
-  Serial.print("  Distance 2 : ");  
-  Serial.println(distance2);
-  Serial.print("VELOCITY : ");    
-  Serial.println(velocity);
-  Serial.println("----CONDITION----");
-  Serial.print("X_ANGLE COND : ");
-  Serial.println(cond1);
-  Serial.print("Y_ANGLE MIN: ");
-  Serial.println(cond2);              
-  Serial.print("Y_ANGLE MAX: ");         
-  Serial.println(cond3);
-  Serial.println("----------------");                 
+  //safe_mode = pulseIn(receiver_pin,HIGH);      
 
 //deploy
  //if(safe_mode >= 1500){ //from rc receiver
     if (valuexrad<=cond1) //compare with x_angle
     { 
-      tone(buzzer, 1000);
-      Serial.println("Good x!");
+      //tone(buzzer, 1000);
+      //Serial.println("Good x!");
         if ((valueyrad)>= cond2 && (valueyrad)<=cond3) //Compare with y_angle
         {     
           //one more time!         
@@ -171,33 +139,15 @@ void loop()
 
            if (valuexrad<=cond1)
            {
-               if ((valueyrad)>= cond2 && (valueyrad)<=cond3)
-               {
-                //Fire
-                servo.write(active_angle); 
-                delay(2000);
-                servo.write(angle);
-                delay(500);
-               }
+              if ((valueyrad)>= cond2 && (valueyrad)<=cond3)
+              {
+               //Fire
+               servo.write(active_angle); 
+               delay(2000);
+               servo.write(angle);
+               delay(500);
+              }
            }  
-
         }
-//               else //Good x , bad y
-//               {
-//                 //Serial.println("Adjust y");
-//                }
-//             }
-//             else
-//             {
-//               Serial.println("Adjust x");
-//               if ((valueyrad)>= cond2 && (valueyrad)<=cond3) //compare with y_angle
-//               {
-//                //Serial.println("Good y");
-//               }
-//               else
-//               {
-//                //Serial.println("Adjust y");
-//               }
-//             }
     }
 }       

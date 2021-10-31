@@ -149,7 +149,7 @@ videostream = VideoStream(resolution=(imW,imH),framerate=30).start()
 time.sleep(1)
 
 # for arduino communication (optional)
-ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1) #communicate with arduino
+ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1) #communicate with arduino
 ser.flush()
 
 #for frame1 in camera.capture_continuous(rawCapture, format="bgr",use_video_port=True):
@@ -197,20 +197,20 @@ while True:
             ymax = int(min(imH,(boxes[i][2] * imH)))
             xmax = int(min(imW,(boxes[i][3] * imW)))
             xaim = -int((xmin+xmax)/2-160)
-            yaim = -int((ymin+ymax)/2-160) ##aim
-            xangle = int(xaim/320*60*10) # camera x angle 450 (revise 60)
-            yangle = int(yaim/240*45*10) # camera y angle 450 (revise 45)
+            yaim = int((ymin+ymax)/2-160) ##aim
+            xangle = int(xaim*1.312) # camera x angle 450 (revise 60)
+            yangle = int(yaim*1.312) # camera y angle 450 (revise 45)
 		
 	    # Send message to arduino (optional)
-            cmd = str(abs(xangle))+','+str(yangle)+'\n'
+            cmd = str(xangle)+','+str(yangle)+'\n'
             ser.write(cmd.encode('utf-8'))
             
             # from arduino
-            # line = ser.readline().decode('utf-8').rstrip()
+            line = ser.readline().decode('utf-8').rstrip()
 		
             # for debug
             print(cmd)
-            #print("We got "+line+ "from arduino")
+            print("We got "+line+ "from arduino")
 
 
 		
@@ -222,7 +222,7 @@ while True:
             labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2) # Get font size
             label_ymin = max(ymin, labelSize[1] + 10) # Make sure not to draw label too close to top of window
             cv2.rectangle(frame, (xmin, label_ymin-labelSize[1]-10), (xmin+labelSize[0], label_ymin+baseLine-10), (255, 255, 255), cv2.FILLED) # Draw white box to put label text in
-            cv2.putText(frame, str(xmin)+","+str(xmax)+","+str(ymin)+","+str(ymax)+"/"+str(xaim)+","+str(yaim), (xmin, label_ymin-7), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2) # Draw label text,frame coordinate
+            cv2.putText(frame, str(xmin-160)+","+str(xmax-160)+","+str(ymin-160)+","+str(ymax-160)+"/"+str(xaim)+","+str(yaim), (xmin, label_ymin-7), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2) # Draw label text,frame coordinate
 
        
 
@@ -245,4 +245,5 @@ while True:
 # Clean up
 cv2.destroyAllWindows()
 videostream.stop()
+
 
