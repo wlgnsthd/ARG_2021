@@ -1,8 +1,8 @@
 #define trig 8   
 #define echo 9
 #define servoPin 10
-#define angle  0 //servo_idle
-#define active_angle  90 //servo_active
+#define angle  90 //servo_idle
+#define active_angle  0 //servo_active
 //#define buzzer  3
 //#define receiver_pin 5
 
@@ -22,17 +22,18 @@ void setup()
 {
    Serial.begin(9600);    
    pinMode(trig, OUTPUT);    
-   pinMode(echo, INPUT);   
-   servo.attach(servoPin); 
+   pinMode(echo, INPUT);
+   pinMode(servoPin, INPUT);   
 //   pinMode(buzzer, OUTPUT);
    //pinMode(receiver_pin,INPUT);
    m=0;
    valuexrad,valueyrad = 1600;
-   servo.write(angle);
-   delay(500);
+   //servo.write(angle);
+   delay(3000);
 }
 
 void loop(){
+  
   i = 0;
   //height = 5.00; //Trial and error
 
@@ -93,11 +94,14 @@ void loop(){
           }
         else{
 //Serial.println("fire");
+          pinMode(servoPin, OUTPUT);
+          servo.attach(servoPin); 
           servo.write(active_angle); 
           delay(2000); //
           servo.write(angle);//
           delay(500);//
           m = 0;
+          pinMode(servoPin, INPUT);
          }
        }
     }            
