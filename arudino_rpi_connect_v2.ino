@@ -16,7 +16,8 @@ int values[2]; //received values
 
 byte i,m; //for communication,m:2ndtimelaunch
 
-float valuexrad, valueyrad, velocity, height, height_test, cond1, cond2, cond3; 
+float valuexrad, valueyrad, height, height_test, cond1, cond2, cond3; 
+float velocity = 15.0; //Trial and error 15m/s
 
 void setup()
 {
@@ -27,9 +28,11 @@ void setup()
 //   pinMode(buzzer, OUTPUT);
    //pinMode(receiver_pin,INPUT);
    m=0;
-   valuexrad,valueyrad = 1600;
+   valuexrad,valueyrad = 1600; //prevent to move at firsttime
+   height_test = 2.0;
    //servo.write(angle);
    delay(3000);
+
 }
 
 void loop(){
@@ -46,7 +49,7 @@ void loop(){
   while (ptr != NULL)              
   {
     values[i] = atoi(ptr);
-    ptr = strtok(NULL, ",");      
+    ptr = strtok(NULL, ","); 
     i = i+1;
   }
   //no values
@@ -64,9 +67,10 @@ void loop(){
   delayMicroseconds(10);            
   digitalWrite(trig, LOW);    
   //height filtering
-  height = pulseIn(echo, HIGH) * 0.000170;  //meter
-  //velocity  
-  velocity = 3.0; //Trial and error
+  height_test = pulseIn(echo, HIGH) * 0.000170;  //meter
+  if (height_test >= 2.0){
+  height = height_test;
+  }
    
   //deploy condition
   cond1 = atanf((velocity) * sqrt(height) * 0.30102); //x angle
@@ -89,19 +93,17 @@ void loop(){
   //safe_mode = pulseIn(receiver_pin,HIGH);        
     if ((valuexrad)<=cond1){
        if ((valueyrad)>= cond2 && (valueyrad)<=cond3){
-        if(m<2){
           m = m+1;
-          }
-        else{
+        if(m == 3){
 //Serial.println("fire");
           pinMode(servoPin, OUTPUT);
           servo.attach(servoPin); 
           servo.write(active_angle); 
           delay(2000); //
           servo.write(angle);//
-          delay(500);//
-          m = 0;
+          delay(1000);//
           pinMode(servoPin, INPUT);
+          m = 0;
          }
        }
     }            
