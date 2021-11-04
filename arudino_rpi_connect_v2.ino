@@ -3,8 +3,6 @@
 #define servoPin 10
 #define angle  90 //servo_idle
 #define active_angle  0 //servo_active
-//#define buzzer  3
-//#define receiver_pin 5
 
 #include <Servo.h> 
 #include <math.h>
@@ -25,8 +23,6 @@ void setup()
    pinMode(trig, OUTPUT);    
    pinMode(echo, INPUT);
    pinMode(servoPin, INPUT);   
-//   pinMode(buzzer, OUTPUT);
-   //pinMode(receiver_pin,INPUT);
    m=0;
    valuexrad,valueyrad = 1600; //prevent to move at firsttime
    height_test = 2.0;
@@ -76,26 +72,11 @@ void loop(){
   cond1 = atanf((velocity) * sqrt(height) * 0.30102); //x angle
   cond2 = atanf(((velocity) * sqrt(0.20387 * height) - 4.50000) / height) - 0.78540; //y angle1
   cond3 = atanf(((velocity) * sqrt(0.20387 * height) + 4.50000) / height) - 0.78540; //y angle2
-
-//Serial.println(values[0]);
-//Serial.println(values[1]);
-//Serial.println(valuexrad);
-//Serial.println(valueyrad);
-//Serial.println(cond1);
-//Serial.println(cond2);
-//Serial.println(cond3);
-//Serial.println(height);
-//Serial.println(m);
-//Serial.println("_______");
-
-
-  //verify safemode -> too much time
-  //safe_mode = pulseIn(receiver_pin,HIGH);        
+   
     if ((valuexrad)<=cond1){
        if ((valueyrad)>= cond2 && (valueyrad)<=cond3){
           m = m+1;
         if(m == 3){
-//Serial.println("fire");
           pinMode(servoPin, OUTPUT);
           servo.attach(servoPin); 
           servo.write(active_angle); 
