@@ -51,9 +51,12 @@ void loop(){
   if(radio.available()) {
   char text[32] = "";
   radio.read(&text, sizeof(text));
-  //Serial.println(text);
   //1:Safe mode, 2:Safe mode off, 3:Launch
-  r_text = text; //
+  r_text = text; 
+  /*
+  Serial.print("r_test : ");
+  Serial.println(r_text):
+  */
  }
   if(r_text == "1"){
     noTone(buzzer); 
