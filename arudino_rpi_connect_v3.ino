@@ -60,10 +60,12 @@ void loop(){
  }
   if(r_text == "1"){
     noTone(buzzer); 
+    tone(buzzer,190);
     servo.write(angle);
     delay(50);
   }
   else if(r_text == "2"){
+    noTone(buzzer); 
     tone(buzzer,1000);
     i = 0;
     
@@ -126,9 +128,8 @@ void loop(){
 
   else if(r_text == "3"){
     noTone(buzzer);
+    tone(buzzer,440);
     servo.write(active_angle);
     delay(50);  
     }
-
-  delay(50);
 }
