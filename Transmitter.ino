@@ -8,6 +8,7 @@ int safe_mode_ON =2;
 int safe_mode_OFF =3;
 int Fire =4;
 char text;
+int buttons=0;
 
 void setup() {
   pinMode(safe_mode_ON,INPUT);
@@ -19,7 +20,7 @@ void setup() {
   //RF24_PA_MIN / RF24_PA_LOW / RF24_PA_HIGH / RF24_PA_MAX
   //10uF compatitor 
   radio.stopListening();  
-  Serial.begin(9600);  
+  //Serial.begin(9600);  
 }
 
 void loop() {
@@ -30,21 +31,31 @@ void loop() {
   Serial.println(digitalRead(safe_mode_OFF));
   Serial.print("Fire ");
   Serial.println(digitalRead(Fire));
-*/
+  */
 
   if(digitalRead(safe_mode_ON)== 1){
-  char text[] ="1";
-  radio.write(&text, sizeof(text)); 
-  //Serial.println("1");
+  buttons = 1;
   }
   else if(digitalRead(safe_mode_OFF)==1){
-  char text[] ="2";
-  radio.write(&text, sizeof(text)); 
-  //Serial.println("2");
+  buttons = 2;
   }
   else if(digitalRead(Fire)==1){
+  buttons =3 ;
+  }
+  
+  if(buttons == 1){
+  char text[] ="1";
+  radio.write(&text, sizeof(text)); 
+  Serial.println("1");
+  }
+  else if(buttons == 2){
+  char text[] ="2";
+  radio.write(&text, sizeof(text)); 
+  Serial.println("2");
+  }
+  else if(buttons == 3){
   char text[] ="3";
   radio.write(&text, sizeof(text)); 
-  //Serial.println("3");
+  Serial.println("3");
   }
 }
