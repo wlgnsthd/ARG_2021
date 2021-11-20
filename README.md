@@ -19,3 +19,4 @@ Run
 ![photo_2021-11-20_17-46-25](https://user-images.githubusercontent.com/88171531/142720964-55e7dc3e-9627-4a76-b717-24c05915fc94.jpg)
 
 ## Deep learning by Tensorflow2 Lite
+https://colab.research.google.com/drive/1oD-cdCdjcBT6kDmqjt2gapIY7sYLWC6l
