@@ -13,7 +13,6 @@
  
 ## Coral TPU- RPI-(serial)-Arduino Aircraft
 ![photo_2021-11-20_17-46-21](https://user-images.githubusercontent.com/88171531/142720963-5f35bffd-ca7c-43e5-be40-452b660975d0.jpg)
-![photo_2021-11-20_17-46-25](https://user-images.githubusercontent.com/88171531/142720964-55e7dc3e-9627-4a76-b717-24c05915fc94.jpg)
 <img src = "https://user-images.githubusercontent.com/88171531/143569797-87754eed-8e0a-4a13-8c04-9559bb73ea45.gif" >
 ![1637922706516](https://user-images.githubusercontent.com/88171531/143569606-62f5e458-4580-4118-b109-acf29bcc2bc1.jpg)
 
